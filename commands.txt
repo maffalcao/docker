@@ -1,0 +1,105 @@
+
+# criando um container a partir da imagem chamada 'debian' que, após instanciado, recebe e executa o comando 'bash -- version' e finaliza
+docker container run debian bash --version  
+
+# criando um container a partir da imagem chamada 'debian' que, após instanciado, recebe e executa o comando 'bash' em modo interativo (-it)
+docker container run -it debian bash
+
+# criando um container a partir da imagem 'debian' e nomeando-o como 'mydebian'
+docker container run --name mydebian -it debian bash
+
+# reutilizando um container já criado
+docker container start -ai mydebian
+docker container restart mydebian
+
+# criando um container a partir da imagem chamada 'nginx', e habilitando a porta 8080 para acesso
+docker container run -p 8080:80 nginx
+
+# lista todos os containers em execução
+docker ps 
+
+# lista todos os containers já executados
+docker ps -a
+
+# parando a execução de um container a partir de seu nome
+docker stop keen_saha
+# parando a execução de um container a partir de seu id
+docker stop e1ec6e1f9295
+
+# parando todos os containers em execução
+docker kill $(docker ps -q)  
+# removendo todos os containers criados
+docker container rm $(docker ps -a -q)
+# removendo todas as imagens baixadas
+docker image rm $(docker images -q)
+
+# cria container, mapeia porta 8080 -> 80 e mapeis a pasta do continer em uma pasta do host
+docker container run -p 8080:80 -v C:\Users\Marco\curso-docker\ex-volume\html\:/usr/share/nginx/html nginx
+
+# subindo um container em background
+docker container run -d --name ex-daemon-basic -p 8080:80 -v C:\Users\Marco\curso-docker\ex-volume\html\:/usr/share/nginx/html nginx 
+
+# acessando os logs de um container em execução
+docker container logs ex-daemon-basic
+
+# verificando tipo de sistema sendo executado dentro do container que está executando
+docker container exec ex-daemon-basic uname -or
+
+# acessando a documentação dos comandos
+docker container --help
+docker image --help
+docker volume --help
+
+# baixando a imagem redis que possua a tag 'latest'
+docker image pull redis:latest
+docker image ls
+docker image inspect
+
+# criando uma nova tag que aponta para a mesma imagem
+docker image tag redis:latest cod3r-red
+
+# construindo uma imagem
+# criar primeiro arquivo Dockerfile com instruções do build
+# cria imagem, nomeando-a como ex-simple-build e busca pelo arquivo Dockerfile no diretorio local
+docker image build -t ex-simple-build .
+
+# Dockerfile do build com argumento (ver 2-build-com-argumento)
+# se não são passdos os argumentos, a contrução da imagem usa o valor default informado no Dockerfile
+# para passar o argumento na linha de comando
+docker image build --build-arg S3_BUCKET=myapp -t build-com-arg .
+#testando o build criado anteriormente
+docker container run build-com-arg -c 'echo $S3_BUCKET'
+
+
+# subindo uma imagem para o dockerhub
+# primeiramente, tag-ando uma imagem existente, para informar repositório (id do usuário no dockerhub) e versão da imagem
+docker image tag simple-build eccco/simple-build:1.0
+# fazendo login no dockerhub
+docker  login --username=eccco
+# enviando a imagem
+docker image push eccco/simple-build:1.0
+
+#redes
+docker network ls
+# container sem rede (isolado)
+docker container run -d --net none debian
+
+# inspecionando o tipo de rede que é criado por padrão 
+docker network inspect bridge
+
+#criando uma nova rede do drive bridge para isolar as redes dos containers
+docker network create --driver bridge nova_rede
+
+#conectando um container em execução à outra rede
+docker network connect nova_rede nome_container
+
+#iniciando o npm no projeto
+npm init -y
+# intalando dependências que serão utilizadas no node
+npm i --save express@4.15.3 mongoose@4.11.1 node-restful@0.2.6 body-parser@1.17.2 cors@2.8.3
+
+docker-compose up
+docker-compose up -d
+docker-compose down
+docker-compose ps
+docker-compose logs -f -t
