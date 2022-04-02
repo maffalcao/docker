@@ -68,7 +68,7 @@ docker image build -t ex-simple-build .
 # para passar o argumento na linha de comando
 docker image build --build-arg S3_BUCKET=myapp -t build-com-arg .
 #testando o build criado anteriormente
-docker container run build-com-arg -c 'echo $S3_BUCKET'
+docker container run build-com-arg bash -c 'echo $S3_BUCKET'
 
 
 # subindo uma imagem para o dockerhub
